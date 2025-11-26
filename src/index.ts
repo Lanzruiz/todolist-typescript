@@ -5,12 +5,19 @@ interface Todo {
   completed: boolean;
 }
 
-const todos: Array<Todo> = [];
-
 const btn = document.getElementById("btn")!;
 const input = document.getElementById("todoinput")! as HTMLInputElement;
 const form = document.querySelector("form")!;
 const list = document.getElementById("todolist")!;
+
+const todos: Todo[] = readTodos();
+todos.forEach(renderTodo);
+
+function readTodos(): Todo[] {
+  const todosJSON = localStorage.getItem("todos");
+  if (todosJSON === null) return [];
+  return JSON.parse(todosJSON);
+}
 
 function handleSubmit(e: SubmitEvent) {
   e.preventDefault();
@@ -21,7 +28,7 @@ function handleSubmit(e: SubmitEvent) {
 
   todos.push(newTodo);
   renderTodo(newTodo);
-  const newTodoText = input.value;
+  localStorage.setItem("todos", JSON.stringify(todos));
   input.value = "";
 }
 
